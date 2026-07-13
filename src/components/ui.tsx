@@ -9,6 +9,34 @@ export function Money({ amount, className = '' }: { amount: number; className?: 
   return <span className={`tabular-nums ${className}`}>{formatMoney(amount, currency)}</span>
 }
 
+/* ── Заголовок экрана ──────────────────────────────── */
+
+export function ScreenTitle({ children }: { children: ReactNode }) {
+  return <h1 className="mb-5 text-[26px] font-bold tracking-tight text-neutral-900 dark:text-white">{children}</h1>
+}
+
+/* ── Карточка-контейнер ────────────────────────────── */
+
+export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={`rounded-3xl bg-white dark:bg-neutral-800 ${className}`}>{children}</div>
+  )
+}
+
+/* ── Круглый аватар с эмодзи/иконкой ───────────────── */
+
+export function Avatar({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return (
+    <span
+      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg ${
+        className || 'bg-neutral-100 dark:bg-neutral-700'
+      }`}
+    >
+      {children}
+    </span>
+  )
+}
+
 /* ── Modal (нижний лист на мобиле) ─────────────────── */
 
 export function Modal({
@@ -32,21 +60,21 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm sm:items-center"
       onClick={onClose}
     >
       <div
-        className="w-full sm:max-w-md max-h-[92dvh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-white dark:bg-slate-800 p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-xl"
+        className="max-h-[92dvh] w-full overflow-y-auto rounded-t-[28px] bg-white p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-xl dark:bg-neutral-800 sm:max-w-md sm:rounded-[28px]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h2>
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-neutral-900 dark:text-white">{title}</h2>
           <button
             onClick={onClose}
             aria-label="Закрыть"
-            className="rounded-full p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-500 hover:bg-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-600"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <path d="M3 3l10 10M13 3L3 13" />
             </svg>
           </button>
@@ -61,9 +89,11 @@ export function Modal({
 
 export function EmptyState({ icon, text }: { icon: string; text: string }) {
   return (
-    <div className="flex flex-col items-center gap-2 py-16 text-slate-400 dark:text-slate-500">
-      <span className="text-4xl">{icon}</span>
-      <p className="text-sm">{text}</p>
+    <div className="flex flex-col items-center gap-3 py-16 text-neutral-400 dark:text-neutral-500">
+      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-3xl dark:bg-neutral-800">
+        {icon}
+      </span>
+      <p className="max-w-[15rem] text-center text-sm">{text}</p>
     </div>
   )
 }
@@ -75,9 +105,9 @@ export function FAB({ onClick, label }: { onClick: () => void; label: string }) 
     <button
       onClick={onClick}
       aria-label={label}
-      className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg shadow-blue-600/30 transition-transform hover:scale-105 active:scale-95 sm:bottom-8 sm:right-8"
+      className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand text-neutral-900 shadow-lg shadow-brand/40 transition-transform hover:scale-105 active:scale-95 sm:bottom-8 sm:right-8"
     >
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+      <svg width="24" height="24" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
         <path d="M11 3v16M3 11h16" />
       </svg>
     </button>
@@ -87,7 +117,7 @@ export function FAB({ onClick, label }: { onClick: () => void; label: string }) 
 /* ── Поля форм ─────────────────────────────────────── */
 
 const fieldCls =
-  'w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 px-3.5 py-2.5 text-base text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
+  'w-full rounded-2xl border border-transparent bg-neutral-100 dark:bg-neutral-700 px-4 py-3 text-base text-neutral-900 dark:text-white placeholder:text-neutral-400 focus:border-brand focus:bg-white dark:focus:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand/40'
 
 export function Field({
   label,
@@ -98,7 +128,7 @@ export function Field({
 }) {
   return (
     <label className="mb-3 block">
-      <span className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">{label}</span>
+      <span className="mb-1.5 block text-sm font-medium text-neutral-500 dark:text-neutral-400">{label}</span>
       {children}
     </label>
   )
@@ -116,7 +146,7 @@ export function PrimaryButton(props: React.ButtonHTMLAttributes<HTMLButtonElemen
   return (
     <button
       {...props}
-      className="w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50"
+      className="w-full rounded-full bg-brand py-3.5 font-semibold text-neutral-900 transition-colors hover:bg-brand-600 active:bg-brand-600 disabled:opacity-40"
     />
   )
 }
@@ -125,7 +155,7 @@ export function DangerButton(props: React.ButtonHTMLAttributes<HTMLButtonElement
   return (
     <button
       {...props}
-      className="w-full rounded-xl border border-red-200 dark:border-red-900 py-3 font-medium text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-950"
+      className="w-full rounded-full border border-red-200 py-3.5 font-medium text-red-600 transition-colors hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
     />
   )
 }

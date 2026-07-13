@@ -3,7 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import type { Salary } from '../types'
 import { formatMonth, formatDate, todayISO, currentMonth, parseAmount } from '../lib/format'
-import { Money, Modal, EmptyState, FAB, Field, TextInput, PrimaryButton, DangerButton } from '../components/ui'
+import { Money, Modal, EmptyState, FAB, Field, TextInput, PrimaryButton, DangerButton, ScreenTitle } from '../components/ui'
 
 export default function Salaries() {
   const salaries = useLiveQuery(() => db.salaries.orderBy('period').reverse().toArray())
@@ -21,16 +21,18 @@ export default function Salaries() {
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Зарплаты</h1>
+      <ScreenTitle>Зарплаты</ScreenTitle>
 
       <div className="mb-5 grid grid-cols-2 gap-3">
-        <div className="rounded-2xl bg-orange-50 p-4 dark:bg-orange-950/40">
-          <p className="text-xs font-medium text-orange-700 dark:text-orange-400">👥 Я должен</p>
-          <Money amount={owedSum} className="mt-1 block text-lg font-bold text-orange-800 dark:text-orange-300" />
+        <div className="rounded-3xl bg-white p-4 dark:bg-neutral-800">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-base dark:bg-orange-950/50">👥</span>
+          <p className="mt-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">Я должен</p>
+          <Money amount={owedSum} className="mt-0.5 block text-lg font-bold" />
         </div>
-        <div className="rounded-2xl bg-emerald-50 p-4 dark:bg-emerald-950/40">
-          <p className="text-xs font-medium text-emerald-700 dark:text-emerald-400">✅ Выплачено</p>
-          <Money amount={paidSum} className="mt-1 block text-lg font-bold text-emerald-800 dark:text-emerald-300" />
+        <div className="rounded-3xl bg-white p-4 dark:bg-neutral-800">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-base dark:bg-emerald-950/50">✅</span>
+          <p className="mt-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">Выплачено</p>
+          <Money amount={paidSum} className="mt-0.5 block text-lg font-bold text-emerald-600 dark:text-emerald-400" />
         </div>
       </div>
 
@@ -38,33 +40,38 @@ export default function Salaries() {
 
       <ul className="space-y-2">
         {salaries?.map((salary) => (
-          <li key={salary.id} className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-800">
+          <li key={salary.id} className="flex items-center gap-3 rounded-2xl bg-white p-3.5 dark:bg-neutral-800">
             <button
               onClick={() => togglePaid(salary)}
               aria-label={salary.status === 'paid' ? 'Пометить как невыплаченную' : 'Выплатил'}
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-colors ${
+              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-base font-bold transition-colors ${
                 salary.status === 'paid'
-                  ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900 dark:text-emerald-300'
-                  : 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300'
+                  ? 'bg-brand text-neutral-900'
+                  : 'bg-orange-100 text-orange-600 dark:bg-orange-950/50 dark:text-orange-300'
               }`}
             >
               {salary.status === 'paid' ? '✓' : '⏳'}
             </button>
             <button className="min-w-0 flex-1 text-left" onClick={() => setEditing(salary)}>
-              <p className="truncate font-medium">{salary.employee}</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="truncate font-semibold">{salary.employee}</p>
+              <p className="text-xs text-neutral-400">
                 За {formatMonth(salary.period).toLowerCase()}
                 {salary.status === 'paid' && salary.paidDate && ` · выплачено ${formatDate(salary.paidDate)}`}
               </p>
             </button>
-            <Money amount={salary.amount} className="shrink-0 font-semibold" />
+            <span className="text-right">
+              <Money amount={salary.amount} className="block font-bold" />
+              <span className="text-[11px] text-neutral-400">{salary.status === 'paid' ? 'Выплачено' : 'Должен'}</span>
+            </span>
           </li>
         ))}
       </ul>
 
-      <p className="mt-4 text-center text-xs text-slate-400 dark:text-slate-500">
-        Нажми на кружок, когда выплатишь зарплату
-      </p>
+      {salaries && salaries.length > 0 && (
+        <p className="mt-4 text-center text-xs text-neutral-400">
+          Нажми на кружок, когда выплатишь зарплату
+        </p>
+      )}
 
       <FAB onClick={() => setEditing('new')} label="Добавить зарплату" />
 

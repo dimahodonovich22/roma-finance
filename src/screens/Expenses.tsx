@@ -5,7 +5,7 @@ import type { Expense } from '../types'
 import { EXPENSE_CATEGORIES } from '../types'
 import { formatDate, todayISO, parseAmount } from '../lib/format'
 import { compressImage } from '../lib/images'
-import { Money, Modal, EmptyState, FAB, Field, TextInput, Select, PrimaryButton, DangerButton } from '../components/ui'
+import { Money, Modal, EmptyState, FAB, Field, TextInput, Select, PrimaryButton, DangerButton, ScreenTitle } from '../components/ui'
 import { ImageViewer, useReceiptUrls } from '../components/ImageViewer'
 
 export default function Expenses() {
@@ -16,11 +16,12 @@ export default function Expenses() {
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Расходы</h1>
+      <ScreenTitle>Расходы</ScreenTitle>
 
-      <div className="mb-5 rounded-2xl bg-rose-50 p-4 dark:bg-rose-950/40">
-        <p className="text-xs font-medium text-rose-700 dark:text-rose-400">🧾 Всего потрачено</p>
-        <Money amount={total} className="mt-1 block text-lg font-bold text-rose-800 dark:text-rose-300" />
+      <div className="mb-5 rounded-3xl bg-white p-5 dark:bg-neutral-800">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-100 text-lg dark:bg-rose-950/50">🧾</span>
+        <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">Всего потрачено</p>
+        <Money amount={total} className="mt-0.5 block text-2xl font-extrabold tracking-tight" />
       </div>
 
       {expenses?.length === 0 && <EmptyState icon="🧾" text="Пока нет расходов" />}
@@ -29,19 +30,22 @@ export default function Expenses() {
         {expenses?.map((expense) => (
           <li key={expense.id}>
             <button
-              className="flex w-full items-center gap-3 rounded-2xl bg-white p-4 text-left shadow-sm dark:bg-slate-800"
+              className="flex w-full items-center gap-3 rounded-2xl bg-white p-3.5 text-left dark:bg-neutral-800"
               onClick={() => setEditing(expense)}
             >
               <ExpenseThumb expenseId={expense.id!} />
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-medium">{expense.title}</span>
-                <span className="block text-xs text-slate-500 dark:text-slate-400">
+                <span className="block truncate font-semibold">{expense.title}</span>
+                <span className="block text-xs text-neutral-400">
                   {formatDate(expense.date)}
                   {expense.category && ` · ${expense.category}`}
                   {expense.note && ` · ${expense.note}`}
                 </span>
               </span>
-              <Money amount={expense.amount} className="shrink-0 font-semibold text-rose-600 dark:text-rose-400" />
+              <span className="text-right">
+                <Money amount={expense.amount} className="block font-bold" />
+                <span className="text-[11px] text-neutral-400">Расход</span>
+              </span>
             </button>
           </li>
         ))}
@@ -82,11 +86,11 @@ function ExpenseThumb({ expenseId }: { expenseId: number }) {
 
   if (!url)
     return (
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-lg dark:bg-slate-700">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-lg dark:bg-neutral-700">
         🧾
       </span>
     )
-  return <img src={url} alt="" className="h-11 w-11 shrink-0 rounded-xl object-cover" />
+  return <img src={url} alt="" className="h-11 w-11 shrink-0 rounded-full object-cover" />
 }
 
 function ExpenseForm({ expense, onClose }: { expense: Expense | null; onClose: () => void }) {
@@ -188,12 +192,12 @@ function ExpenseForm({ expense, onClose }: { expense: Expense | null; onClose: (
 
       {/* Чеки / скрины */}
       <div className="mb-4">
-        <span className="mb-1.5 block text-sm font-medium text-slate-600 dark:text-slate-300">Чеки / скрины</span>
+        <span className="mb-1.5 block text-sm font-medium text-neutral-500 dark:text-neutral-400">Чеки / скрины</span>
         <div className="flex flex-wrap gap-2">
           {savedUrls.map((img) => (
             <div key={img.id} className="relative">
               <button onClick={() => setViewer(img.url)}>
-                <img src={img.url} alt="Чек" className="h-20 w-20 rounded-xl object-cover" />
+                <img src={img.url} alt="Чек" className="h-20 w-20 rounded-2xl object-cover" />
               </button>
               <button
                 onClick={() => removeSavedImage(img.id)}
@@ -207,7 +211,7 @@ function ExpenseForm({ expense, onClose }: { expense: Expense | null; onClose: (
           {newImages.map((img, i) => (
             <div key={img.url} className="relative">
               <button onClick={() => setViewer(img.url)}>
-                <img src={img.url} alt="Новый чек" className="h-20 w-20 rounded-xl object-cover ring-2 ring-blue-400" />
+                <img src={img.url} alt="Новый чек" className="h-20 w-20 rounded-2xl object-cover ring-2 ring-brand" />
               </button>
               <button
                 onClick={() => setNewImages((prev) => prev.filter((_, j) => j !== i))}
@@ -221,7 +225,7 @@ function ExpenseForm({ expense, onClose }: { expense: Expense | null; onClose: (
           <button
             onClick={() => fileRef.current?.click()}
             disabled={busy}
-            className="flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-slate-300 text-xs text-slate-400 dark:border-slate-600"
+            className="flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed border-neutral-300 text-xs text-neutral-400 dark:border-neutral-600"
           >
             <span className="text-xl">{busy ? '…' : '📷'}</span>
             {busy ? '' : 'Добавить'}
@@ -238,7 +242,7 @@ function ExpenseForm({ expense, onClose }: { expense: Expense | null; onClose: (
             e.target.value = ''
           }}
         />
-        <p className="mt-1.5 text-xs text-slate-400">Можно также вставить скрин из буфера (Cmd+V)</p>
+        <p className="mt-1.5 text-xs text-neutral-400">Можно также вставить скрин из буфера (Cmd+V)</p>
       </div>
 
       <div className="space-y-2">

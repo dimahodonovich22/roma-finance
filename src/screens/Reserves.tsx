@@ -3,7 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '../db'
 import type { Reserve } from '../types'
 import { formatMonth, currentMonth, parseAmount } from '../lib/format'
-import { Money, Modal, EmptyState, FAB, Field, TextInput, PrimaryButton, DangerButton } from '../components/ui'
+import { Money, Modal, EmptyState, FAB, Field, TextInput, PrimaryButton, DangerButton, ScreenTitle } from '../components/ui'
 
 export default function Reserves() {
   const reserves = useLiveQuery(() => db.reserves.orderBy('month').reverse().toArray())
@@ -13,14 +13,13 @@ export default function Reserves() {
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Отложено</h1>
+      <ScreenTitle>Отложено</ScreenTitle>
 
-      <div className="mb-5 rounded-2xl bg-violet-50 p-4 dark:bg-violet-950/40">
-        <p className="text-xs font-medium text-violet-700 dark:text-violet-400">🏦 Всего отложено</p>
-        <Money amount={total} className="mt-1 block text-lg font-bold text-violet-800 dark:text-violet-300" />
-        <p className="mt-1 text-xs text-violet-600/70 dark:text-violet-400/70">
-          Эти суммы вычитаются из итога «Останется»
-        </p>
+      <div className="mb-5 rounded-3xl bg-white p-5 dark:bg-neutral-800">
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-100 text-lg dark:bg-violet-950/50">🏦</span>
+        <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">Всего отложено</p>
+        <Money amount={total} className="mt-0.5 block text-2xl font-extrabold tracking-tight" />
+        <p className="mt-1.5 text-xs text-neutral-400">Эти суммы вычитаются из итога «Останется»</p>
       </div>
 
       {reserves?.length === 0 && <EmptyState icon="🏦" text="Отмечай суммы, которые нужно отложить — например, на декларацию" />}
@@ -29,19 +28,19 @@ export default function Reserves() {
         {reserves?.map((reserve) => (
           <li key={reserve.id}>
             <button
-              className="flex w-full items-center gap-3 rounded-2xl bg-white p-4 text-left shadow-sm dark:bg-slate-800"
+              className="flex w-full items-center gap-3 rounded-2xl bg-white p-3.5 text-left dark:bg-neutral-800"
               onClick={() => setEditing(reserve)}
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm dark:bg-violet-900">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-100 text-lg dark:bg-violet-950/50">
                 🏦
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-medium">За {formatMonth(reserve.month).toLowerCase()}</span>
+                <span className="block truncate font-semibold">За {formatMonth(reserve.month).toLowerCase()}</span>
                 {reserve.note && (
-                  <span className="block text-xs text-slate-500 dark:text-slate-400">{reserve.note}</span>
+                  <span className="block text-xs text-neutral-400">{reserve.note}</span>
                 )}
               </span>
-              <Money amount={reserve.amount} className="shrink-0 font-semibold text-violet-700 dark:text-violet-300" />
+              <Money amount={reserve.amount} className="shrink-0 font-bold text-violet-600 dark:text-violet-300" />
             </button>
           </li>
         ))}

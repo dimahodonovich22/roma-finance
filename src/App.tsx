@@ -21,8 +21,8 @@ export default function App() {
   const [tab, setTab] = useState<TabId>('dashboard')
 
   return (
-    <div className="min-h-dvh bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-white">
-      <div className="mx-auto max-w-2xl px-4 pb-[calc(5.5rem+env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] sm:pb-8">
+    <div className="min-h-dvh text-neutral-900 dark:text-white">
+      <div className="mx-auto max-w-2xl px-4 pb-[calc(6rem+env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] sm:pb-8">
         {tab === 'dashboard' && <Dashboard onNavigate={(t) => setTab(t as TabId)} />}
         {tab === 'incomes' && <Incomes />}
         {tab === 'expenses' && <Expenses />}
@@ -32,22 +32,35 @@ export default function App() {
       </div>
 
       {/* Нижняя навигация */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-200 bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur dark:border-slate-700 dark:bg-slate-800/90">
-        <div className="mx-auto flex max-w-2xl">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] transition-colors ${
-                tab === t.id
-                  ? 'font-semibold text-blue-600 dark:text-blue-400'
-                  : 'text-slate-500 dark:text-slate-400'
-              }`}
-            >
-              <span className="text-lg leading-none">{t.icon}</span>
-              {t.label}
-            </button>
-          ))}
+      <nav className="fixed inset-x-0 bottom-0 z-30 pb-[env(safe-area-inset-bottom)]">
+        <div className="mx-auto flex max-w-2xl items-center justify-between rounded-t-[28px] border-t border-neutral-200/60 bg-white px-2 py-2 shadow-[0_-4px_24px_rgba(0,0,0,0.06)] dark:border-neutral-700/60 dark:bg-neutral-800">
+          {TABS.map((t) => {
+            const active = tab === t.id
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className="flex flex-1 flex-col items-center gap-1 py-1"
+              >
+                <span
+                  className={`flex h-9 w-9 items-center justify-center rounded-full text-lg transition-colors ${
+                    active ? 'bg-brand' : 'bg-transparent'
+                  }`}
+                >
+                  {t.icon}
+                </span>
+                <span
+                  className={`text-[10px] transition-colors ${
+                    active
+                      ? 'font-semibold text-neutral-900 dark:text-white'
+                      : 'text-neutral-400 dark:text-neutral-500'
+                  }`}
+                >
+                  {t.label}
+                </span>
+              </button>
+            )
+          })}
         </div>
       </nav>
     </div>

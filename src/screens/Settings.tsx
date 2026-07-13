@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { db, getSetting, setSetting } from '../db'
 import { exportBackup, importBackup } from '../lib/backup'
 import { parseAmount } from '../lib/format'
-import { Field, TextInput, PrimaryButton, DangerButton } from '../components/ui'
+import { Field, TextInput, PrimaryButton, DangerButton, ScreenTitle } from '../components/ui'
 
 export default function Settings() {
   const [currency, setCurrency] = useState('')
@@ -73,9 +73,9 @@ export default function Settings() {
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold">Настройки</h1>
+      <ScreenTitle>Настройки</ScreenTitle>
 
-      <div className="mb-4 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-800">
+      <div className="mb-3 rounded-3xl bg-white p-5 dark:bg-neutral-800">
         <Field label="Валюта (символ)">
           <TextInput value={currency} onChange={(e) => setCurrency(e.target.value)} placeholder="zł / € / $ / ₽" />
         </Field>
@@ -90,9 +90,9 @@ export default function Settings() {
         <PrimaryButton onClick={save}>Сохранить настройки</PrimaryButton>
       </div>
 
-      <div className="mb-4 rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-800">
-        <h2 className="mb-1 font-semibold">Резервная копия</h2>
-        <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+      <div className="mb-3 rounded-3xl bg-white p-5 dark:bg-neutral-800">
+        <h2 className="mb-1 font-bold">Резервная копия</h2>
+        <p className="mb-4 text-sm text-neutral-500 dark:text-neutral-400">
           Данные хранятся только в этом браузере. Регулярно скачивай бэкап, чтобы ничего не потерять
           (в нём всё, включая скрины чеков).
         </p>
@@ -100,7 +100,7 @@ export default function Settings() {
           <PrimaryButton onClick={doExport}>⬇️ Скачать бэкап</PrimaryButton>
           <button
             onClick={() => fileRef.current?.click()}
-            className="w-full rounded-xl border border-slate-300 py-3 font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+            className="w-full rounded-full border border-neutral-200 py-3.5 font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
           >
             ⬆️ Восстановить из бэкапа
           </button>
@@ -118,13 +118,13 @@ export default function Settings() {
         </div>
       </div>
 
-      <div className="rounded-2xl bg-white p-4 shadow-sm dark:bg-slate-800">
-        <h2 className="mb-3 font-semibold text-red-600 dark:text-red-400">Опасная зона</h2>
+      <div className="rounded-3xl bg-white p-5 dark:bg-neutral-800">
+        <h2 className="mb-3 font-bold text-red-600 dark:text-red-400">Опасная зона</h2>
         <DangerButton onClick={wipeAll}>Удалить все данные</DangerButton>
       </div>
 
       {message && (
-        <p className="fixed inset-x-4 top-4 z-50 mx-auto max-w-md rounded-xl bg-slate-900 px-4 py-3 text-center text-sm text-white shadow-lg dark:bg-white dark:text-slate-900">
+        <p className="fixed inset-x-4 top-4 z-50 mx-auto max-w-md rounded-2xl bg-neutral-900 px-4 py-3 text-center text-sm text-white shadow-lg dark:bg-white dark:text-neutral-900">
           {message}
         </p>
       )}
