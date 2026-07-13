@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { Clock, CircleCheck, Check, Wallet } from 'lucide-react'
 import { db } from '../db'
 import type { Income } from '../types'
 import { formatDate, todayISO, parseAmount } from '../lib/format'
@@ -27,18 +28,18 @@ export default function Incomes() {
 
       <div className="mb-5 grid grid-cols-2 gap-3">
         <div className="rounded-3xl bg-white p-4 dark:bg-neutral-800">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 text-base dark:bg-amber-950/50">⏳</span>
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400"><Clock size={18} /></span>
           <p className="mt-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">Ждёт оплаты</p>
           <Money amount={pendingSum} className="mt-0.5 block text-lg font-bold" />
         </div>
         <div className="rounded-3xl bg-white p-4 dark:bg-neutral-800">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-base dark:bg-emerald-950/50">✅</span>
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400"><CircleCheck size={18} /></span>
           <p className="mt-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">Получено</p>
           <Money amount={paidSum} className="mt-0.5 block text-lg font-bold text-emerald-600 dark:text-emerald-400" />
         </div>
       </div>
 
-      {incomes?.length === 0 && <EmptyState icon="💰" text="Пока нет доходов — добавь первую фактуру" />}
+      {incomes?.length === 0 && <EmptyState icon={<Wallet size={28} />} text="Пока нет доходов — добавь первую фактуру" />}
 
       <ul className="space-y-2">
         {incomes?.map((income) => (
@@ -49,13 +50,13 @@ export default function Incomes() {
             <button
               onClick={() => togglePaid(income)}
               aria-label={income.status === 'paid' ? 'Пометить как неоплаченный' : 'Деньги пришли'}
-              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-base font-bold transition-colors ${
+              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors ${
                 income.status === 'paid'
                   ? 'bg-brand text-neutral-900'
                   : 'bg-amber-100 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300'
               }`}
             >
-              {income.status === 'paid' ? '✓' : '⏳'}
+              {income.status === 'paid' ? <Check size={20} strokeWidth={2.5} /> : <Clock size={18} />}
             </button>
             <button className="min-w-0 flex-1 text-left" onClick={() => setEditing(income)}>
               <p className="truncate font-semibold">{income.title}</p>

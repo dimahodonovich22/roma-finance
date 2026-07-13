@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { PiggyBank } from 'lucide-react'
 import { db } from '../db'
 import type { Reserve } from '../types'
 import { formatMonth, currentMonth, parseAmount } from '../lib/format'
@@ -16,13 +17,13 @@ export default function Reserves() {
       <ScreenTitle>Отложено</ScreenTitle>
 
       <div className="mb-5 rounded-3xl bg-white p-5 dark:bg-neutral-800">
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-100 text-lg dark:bg-violet-950/50">🏦</span>
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-950/50 dark:text-violet-400"><PiggyBank size={20} /></span>
         <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">Всего отложено</p>
         <Money amount={total} className="mt-0.5 block text-2xl font-extrabold tracking-tight" />
         <p className="mt-1.5 text-xs text-neutral-400">Эти суммы вычитаются из итога «Останется»</p>
       </div>
 
-      {reserves?.length === 0 && <EmptyState icon="🏦" text="Отмечай суммы, которые нужно отложить — например, на декларацию" />}
+      {reserves?.length === 0 && <EmptyState icon={<PiggyBank size={28} />} text="Отмечай суммы, которые нужно отложить — например, на декларацию" />}
 
       <ul className="space-y-2">
         {reserves?.map((reserve) => (
@@ -31,8 +32,8 @@ export default function Reserves() {
               className="flex w-full items-center gap-3 rounded-2xl bg-white p-3.5 text-left dark:bg-neutral-800"
               onClick={() => setEditing(reserve)}
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-100 text-lg dark:bg-violet-950/50">
-                🏦
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-950/50 dark:text-violet-400">
+                <PiggyBank size={20} />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate font-semibold">За {formatMonth(reserve.month).toLowerCase()}</span>

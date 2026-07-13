@@ -87,10 +87,10 @@ export function Modal({
 
 /* ── EmptyState ────────────────────────────────────── */
 
-export function EmptyState({ icon, text }: { icon: string; text: string }) {
+export function EmptyState({ icon, text }: { icon: ReactNode; text: string }) {
   return (
     <div className="flex flex-col items-center gap-3 py-16 text-neutral-400 dark:text-neutral-500">
-      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-3xl dark:bg-neutral-800">
+      <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500">
         {icon}
       </span>
       <p className="max-w-[15rem] text-center text-sm">{text}</p>

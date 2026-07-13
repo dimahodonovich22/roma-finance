@@ -20,7 +20,7 @@ export function useTotals(): Totals | undefined {
       db.expenses.toArray(),
       db.salaries.toArray(),
       db.reserves.toArray(),
-      getSetting('startingBalance', '0'),
+      getSetting('startingBalance', '0'), // currency ниже в useCurrency
     ])
 
     const startingBalance = Number(startRaw) || 0
@@ -42,5 +42,5 @@ export function useTotals(): Totals | undefined {
 }
 
 export function useCurrency(): string {
-  return useLiveQuery(() => getSetting('currency', 'zł'), [], 'zł') ?? 'zł'
+  return useLiveQuery(() => getSetting('currency', '€'), [], '€') ?? '€'
 }

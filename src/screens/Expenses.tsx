@@ -4,6 +4,7 @@ import { db } from '../db'
 import type { Expense } from '../types'
 import { EXPENSE_CATEGORIES } from '../types'
 import { formatDate, todayISO, parseAmount } from '../lib/format'
+import { Receipt, Camera } from 'lucide-react'
 import { compressImage } from '../lib/images'
 import { Money, Modal, EmptyState, FAB, Field, TextInput, Select, PrimaryButton, DangerButton, ScreenTitle } from '../components/ui'
 import { ImageViewer, useReceiptUrls } from '../components/ImageViewer'
@@ -19,12 +20,12 @@ export default function Expenses() {
       <ScreenTitle>Расходы</ScreenTitle>
 
       <div className="mb-5 rounded-3xl bg-white p-5 dark:bg-neutral-800">
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-100 text-lg dark:bg-rose-950/50">🧾</span>
+        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-100 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400"><Receipt size={20} /></span>
         <p className="mt-3 text-sm text-neutral-500 dark:text-neutral-400">Всего потрачено</p>
         <Money amount={total} className="mt-0.5 block text-2xl font-extrabold tracking-tight" />
       </div>
 
-      {expenses?.length === 0 && <EmptyState icon="🧾" text="Пока нет расходов" />}
+      {expenses?.length === 0 && <EmptyState icon={<Receipt size={28} />} text="Пока нет расходов" />}
 
       <ul className="space-y-2">
         {expenses?.map((expense) => (
@@ -86,8 +87,8 @@ function ExpenseThumb({ expenseId }: { expenseId: number }) {
 
   if (!url)
     return (
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-lg dark:bg-neutral-700">
-        🧾
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 dark:bg-neutral-700 dark:text-neutral-300">
+        <Receipt size={20} />
       </span>
     )
   return <img src={url} alt="" className="h-11 w-11 shrink-0 rounded-full object-cover" />
@@ -227,7 +228,7 @@ function ExpenseForm({ expense, onClose }: { expense: Expense | null; onClose: (
             disabled={busy}
             className="flex h-20 w-20 flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed border-neutral-300 text-xs text-neutral-400 dark:border-neutral-600"
           >
-            <span className="text-xl">{busy ? '…' : '📷'}</span>
+            {busy ? <span className="text-xl">…</span> : <Camera size={22} />}
             {busy ? '' : 'Добавить'}
           </button>
         </div>

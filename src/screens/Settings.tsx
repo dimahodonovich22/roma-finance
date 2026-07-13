@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Download, Upload } from 'lucide-react'
 import { db, getSetting, setSetting } from '../db'
 import { exportBackup, importBackup } from '../lib/backup'
 import { parseAmount } from '../lib/format'
@@ -12,7 +13,7 @@ export default function Settings() {
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    Promise.all([getSetting('currency', 'zł'), getSetting('startingBalance', '0')]).then(
+    Promise.all([getSetting('currency', '€'), getSetting('startingBalance', '0')]).then(
       ([cur, start]) => {
         setCurrency(cur)
         setStartingBalance(start)
@@ -24,21 +25,21 @@ export default function Settings() {
   async function save() {
     const balance = startingBalance.trim() === '' ? 0 : parseAmount(startingBalance)
     if (Number.isNaN(balance)) {
-      setMessage('❌ Неверный формат начального остатка')
+      setMessage('Неверный формат начального остатка')
       return
     }
-    await setSetting('currency', currency.trim() || 'zł')
+    await setSetting('currency', currency.trim() || '€')
     await setSetting('startingBalance', String(balance))
-    setMessage('✅ Сохранено')
+    setMessage('Сохранено')
     setTimeout(() => setMessage(''), 2000)
   }
 
   async function doExport() {
     try {
       await exportBackup()
-      setMessage('✅ Бэкап скачан — сохрани файл в надёжное место')
+      setMessage('Бэкап скачан — сохрани файл в надёжное место')
     } catch {
-      setMessage('❌ Не удалось создать бэкап')
+      setMessage('Не удалось создать бэкап')
     }
   }
 
@@ -46,12 +47,12 @@ export default function Settings() {
     if (!confirm('Импорт ЗАМЕНИТ все текущие данные содержимым бэкапа. Продолжить?')) return
     try {
       const count = await importBackup(file)
-      setMessage(`✅ Восстановлено записей: ${count}`)
-      const [cur, start] = await Promise.all([getSetting('currency', 'zł'), getSetting('startingBalance', '0')])
+      setMessage(`Восстановлено записей: ${count}`)
+      const [cur, start] = await Promise.all([getSetting('currency', '€'), getSetting('startingBalance', '0')])
       setCurrency(cur)
       setStartingBalance(start)
     } catch (e) {
-      setMessage(`❌ ${e instanceof Error ? e.message : 'Не удалось импортировать'}`)
+      setMessage(`${e instanceof Error ? e.message : 'Не удалось импортировать'}`)
     }
   }
 
@@ -64,7 +65,7 @@ export default function Settings() {
         db.salaries.clear(), db.reserves.clear(), db.settings.clear(),
       ])
     })
-    setCurrency('zł')
+    setCurrency('€')
     setStartingBalance('0')
     setMessage('Все данные удалены')
   }
@@ -97,12 +98,14 @@ export default function Settings() {
           (в нём всё, включая скрины чеков).
         </p>
         <div className="space-y-2">
-          <PrimaryButton onClick={doExport}>⬇️ Скачать бэкап</PrimaryButton>
+          <PrimaryButton onClick={doExport}>
+            <span className="flex items-center justify-center gap-2"><Download size={18} /> Скачать бэкап</span>
+          </PrimaryButton>
           <button
             onClick={() => fileRef.current?.click()}
-            className="w-full rounded-full border border-neutral-200 py-3.5 font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
+            className="flex w-full items-center justify-center gap-2 rounded-full border border-neutral-200 py-3.5 font-medium text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
           >
-            ⬆️ Восстановить из бэкапа
+            <Upload size={18} /> Восстановить из бэкапа
           </button>
           <input
             ref={fileRef}
