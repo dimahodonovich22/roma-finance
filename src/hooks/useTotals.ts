@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db, getSetting } from '../db'
+import { incomeNet } from '../lib/format'
 
 export interface Totals {
   startingBalance: number
@@ -24,8 +25,8 @@ export function useTotals(): Totals | undefined {
     ])
 
     const startingBalance = Number(startRaw) || 0
-    const receivedIncome = incomes.filter((i) => i.status === 'paid').reduce((s, i) => s + i.amount, 0)
-    const pendingIncome = incomes.filter((i) => i.status === 'pending').reduce((s, i) => s + i.amount, 0)
+    const receivedIncome = incomes.filter((i) => i.status === 'paid').reduce((s, i) => s + incomeNet(i), 0)
+    const pendingIncome = incomes.filter((i) => i.status === 'pending').reduce((s, i) => s + incomeNet(i), 0)
     const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0)
     const paidSalaries = salaries.filter((s) => s.status === 'paid').reduce((s2, x) => s2 + x.amount, 0)
     const owedSalaries = salaries.filter((s) => s.status === 'owed').reduce((s2, x) => s2 + x.amount, 0)

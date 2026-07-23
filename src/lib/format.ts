@@ -1,7 +1,18 @@
+import type { Income } from '../types'
+
 const numFmt = new Intl.NumberFormat('ru-RU', {
   minimumFractionDigits: 0,
   maximumFractionDigits: 2,
 })
+
+/** Чистая сумма дохода к получению: для кэша вычитаем указанный процент */
+export function incomeNet(income: Pick<Income, 'amount' | 'paymentMethod' | 'cashPercent'>): number {
+  if (income.paymentMethod === 'cash' && income.cashPercent) {
+    const pct = Math.min(Math.max(income.cashPercent, 0), 100)
+    return income.amount * (1 - pct / 100)
+  }
+  return income.amount
+}
 
 export function formatMoney(amount: number, currency: string): string {
   return `${numFmt.format(amount)} ${currency}`

@@ -1,5 +1,6 @@
 export type IncomeStatus = 'pending' | 'paid'
 export type SalaryStatus = 'owed' | 'paid'
+export type PaymentMethod = 'card' | 'cash'
 
 export interface Income {
   id?: number
@@ -9,6 +10,8 @@ export interface Income {
   status: IncomeStatus
   paidDate?: string
   note?: string
+  paymentMethod?: PaymentMethod // как платят: на карту (по умолчанию) или кэшом
+  cashPercent?: number // процент, вычитаемый из кэша (0–100)
 }
 
 export interface Expense {
